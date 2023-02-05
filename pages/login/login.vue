@@ -1,5 +1,6 @@
 <template>
 	<view>
+		<u-toast ref="uToast"></u-toast>
 		<view class="center">
 			<u-input class="center-account" placeholder="请输入账号" shape="circle"></u-input>
 			<u-input class="center-account" type="password" placeholder="请输入密码" shape="circle"></u-input>
@@ -26,7 +27,7 @@
 	export default {
 		data() {
 			return {
-				captchaSrc: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAAoCAMAAAA/pq9xAAAAP1BMVEUAAAANbBRMq1NGpU1rynIYdx9OrVU8m0MmhS0ZeCBFpEx93ISR8JiJ6JAaeSFHpk4FZAwkgysNbBRwz3cxkDiJbzLgAAAAAXRSTlMAQObYZgAAAYBJREFUeJzsltGugyAMhqlmokaD4vu/68nUugLFFtzuTq/WAP/Xvxan+Y/aAIzvS28fBnJKjr9UjG0L8ovhgSR5xktHifJT13sfNK/JUTSMK+aAYcCb/deRQtPkKEWMeX4rXv2hjbIA0HxhJgDm/cFfOVmz1p6zd65UsuLZDYE23VltiRwFMJdUKAg7vJ4SQD4YVrCaEjEMcZRoqhlDnhHVGzP0PoZhyNSWznGkWtCrgSluVEAATNUDQZFxHB25JUwH6YVVCZv0hozOOfJu4WjFCGOSyXG4SBbIZj1B7GngD3JDJkjkswCClxEeIsyNL+qn7H3Fbb05/rxTCggiAGDSvX75HatMeZ+dpukBY13Robs9PsmV5MtdcXW/iI9CdAqSk4eIHinZ6DSM29W+74VKuk6mSJ3qRQWRUf53LEjG33k42YtO/dgtNCf+mkQPyyJSLDlBGS1DYRkKJ8dnYhpty1AIoexZ8AzWCWGUECrj94ywU/43jCDz/obyFwAA///pWwVM7x+RIQAAAABJRU5ErkJggg=="
+				captchaSrc: ""
 			};
 		},
 		methods:{
@@ -35,13 +36,22 @@
 					let res = await Http.captcha()
 					if(res.code != 200){
 						//TODO 提示错误
-						return
+						if(res.msg){
+							this.showToast(res.msg)
+							return
+						}else{
+							this.showToast(`未知code:${res.code}`)
+							return
+						}
 					}
 					this.captchaSrc = res.data.bs4
 				}catch(e){
 					//TODO handle the exception
+					this.showToast(e)
 				}
-				
+			},
+			showToast(errMsg){
+				this.$refs.uToast.show({message:errMsg,duration: 1000})
 			}
 		},
 		mounted() {

@@ -25,5 +25,8 @@ export default {
 	captcha(){
 		let url = BaseUrl+CaptchaPath
 		return this.post(url)
+	},
+	showToast(errMsg){
+		this.$refs.uToast.show({message:errMsg,duration: 1000})
 	}
 }
