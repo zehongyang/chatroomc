@@ -2,20 +2,20 @@
 	<view>
 		<u-toast ref="uToast"></u-toast>
 		<view class="center">
-			<u-input class="center-account" placeholder="请输入账号" shape="circle"></u-input>
-			<u-input class="center-account" type="password" placeholder="请输入密码" shape="circle"></u-input>
+			<u-input class="center-account" v-model="userName" @change="canSubmit" placeholder="请输入6-16位账号" shape="circle"></u-input>
+			<u-input class="center-account" v-model="password" @change="canSubmit" type="password" placeholder="请输入6位及以上密码" shape="circle"></u-input>
 			<view class="captcha">
-				<u-input class="captcha-info" placeholder="请输入验证码" shape="circle"></u-input>
+				<u-input class="captcha-info" v-model="code" @change="canSubmit" placeholder="请输入验证码" shape="circle"></u-input>
 				<u-image :src="captchaSrc" width="100" height="40" @click="captcha"></u-image>
 			</view>
 			<view class="center-agree">
-				<u-checkbox-group>
-					<u-checkbox shape="circle" size="12" labelSize="12" label="已阅读并同意 <<用户协议>> 和 <<隐私政策>>"></u-checkbox>
-				</u-checkbox-group>
+				<u-radio-group v-model="agreePrivacy" @change="jumpToPrivacy">
+					<u-radio shape="circle"  name="privacy" size="12" labelSize="12" label="已阅读并同意 <<用户协议>> 和 <<隐私政策>>" ></u-radio>
+				</u-radio-group>
 			</view>
 			<view class="center-button">
-				<u-button  shape="circle" text="注册"></u-button>
-				<u-button  shape="circle" text="登录"></u-button>
+				<u-button  shape="circle" :disabled="noOpt" @click="register" text="注册"></u-button>
+				<u-button  shape="circle" :disabled="noOpt" text="登录"></u-button>
 			</view>
 		</view>
 	</view>
@@ -27,7 +27,14 @@
 	export default {
 		data() {
 			return {
-				captchaSrc: ""
+				captchaSrc: "",
+				agreePrivacy: "",
+				checked: false,
+				noOpt: true,
+				userName: "",
+				password: "",
+				code: "",
+				idkey: "",
 			};
 		},
 		methods:{
@@ -45,13 +52,43 @@
 						}
 					}
 					this.captchaSrc = res.data.bs4
+					this.idkey = res.data.id
 				}catch(e){
-					//TODO handle the exception
 					this.showToast(e)
 				}
 			},
 			showToast(errMsg){
 				this.$refs.uToast.show({message:errMsg,duration: 1000})
+			},
+			jumpToPrivacy(){
+				this.checked = !this.checked
+				this.noOpt = (!this.userName || this.userName.length < 6 || this.userName.length > 16  || !this.password || this.password.length < 6 || !this.code || !this.checked)
+				if(this.checked){
+					uni.navigateTo({
+						url:'/pages/privacy/privacy'
+					})
+				}else{
+					this.agreePrivacy = ""
+				}
+			},
+			canSubmit(){
+				this.noOpt = (!this.userName || this.userName.length < 6 || this.userName.length > 16  || !this.password || this.password.length < 6 || !this.code || !this.checked)
+			},
+			async register(){
+				try{
+					let res = await Http.register({userName:this.userName,password:this.password,idKey:this.idkey,code:this.code})
+					if(res.code != 200){
+						//TODO 提示错误
+						if(res.msg){
+							this.showToast(res.msg)
+						}else{
+							this.showToast(`未知code:${res.code}`)
+						}
+					}
+				}catch(e){
+					this.showToast(e)
+				}
+				
 			}
 		},
 		mounted() {

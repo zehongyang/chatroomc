@@ -1,5 +1,6 @@
 const BaseUrl = "http://192.168.1.3:8080"
 const CaptchaPath = "/user/captcha"
+const RegisterPath = "/user/register"
 export default {
 	post(url,data,header){
 		return new Promise((resolve,reject)=>{
@@ -26,7 +27,8 @@ export default {
 		let url = BaseUrl+CaptchaPath
 		return this.post(url)
 	},
-	showToast(errMsg){
-		this.$refs.uToast.show({message:errMsg,duration: 1000})
+	register(data){
+		let url = BaseUrl+RegisterPath
+		return this.post(url,data)
 	}
 }
