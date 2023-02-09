@@ -1,5 +1,17 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+	
+	{
+	    "path" : "pages/room/room",
+	    "style" :                                                                                    
+	    {
+	        "navigationBarTitleText": "房间列表",
+	        "enablePullDownRefresh": false,
+			"disableScroll":true
+	    }
+	    
+	}
+	,
 	{
 	    "path" : "pages/login/login",
 	    "style" :                                                                                    
@@ -10,22 +22,12 @@
 	    }
 	    
 	},
-	{
-	    "path" : "pages/room/room",
-	    "style" :                                                                                    
-	    {
-	        "navigationBarTitleText": "房间列表",
-	        "enablePullDownRefresh": false
-	    }
-	    
-	}
-	,
-	
 	  
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": "uni-app",
+				"disableScroll":true
 			}
 		}
         
@@ -45,5 +47,20 @@
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
 	},
-	"uniIdRouter": {}
+	"uniIdRouter": {},
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#3cc51f",
+		"fontSize": "12",
+		"list": [
+			{
+				"text": "首页",
+				"pagePath": "pages/room/room"
+			},
+			{
+				"text": "我的",
+				"pagePath": "pages/index/index"
+			}
+		]
+	}
 }

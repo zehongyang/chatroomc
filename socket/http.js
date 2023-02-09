@@ -1,6 +1,7 @@
 const BaseUrl = "http://192.168.1.3:8080"
 const CaptchaPath = "/user/captcha"
 const RegisterPath = "/user/register"
+const LoginPath = "/user/login"
 export default {
 	post(url,data,header){
 		return new Promise((resolve,reject)=>{
@@ -29,6 +30,10 @@ export default {
 	},
 	register(data){
 		let url = BaseUrl+RegisterPath
+		return this.post(url,data)
+	},
+	login(data){
+		let url = BaseUrl+LoginPath
 		return this.post(url,data)
 	}
 }

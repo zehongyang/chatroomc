@@ -15,7 +15,7 @@
 			</view>
 			<view class="center-button">
 				<u-button  shape="circle" :disabled="noOpt" @click="register" text="注册"></u-button>
-				<u-button  shape="circle" :disabled="noOpt" text="登录"></u-button>
+				<u-button  shape="circle" :disabled="noOpt" @click="login" text="登录"></u-button>
 			</view>
 		</view>
 	</view>
@@ -76,19 +76,48 @@
 			},
 			async register(){
 				try{
+					
 					let res = await Http.register({userName:this.userName,password:this.password,idKey:this.idkey,code:this.code})
 					if(res.code != 200){
 						//TODO 提示错误
 						if(res.msg){
 							this.showToast(res.msg)
+							return
 						}else{
 							this.showToast(`未知code:${res.code}`)
+							return
 						}
 					}
+					uni.setStorageSync("user_info",res.data.userInfo)
+					uni.reLaunch({
+						url:'/pages/room/room'
+					})
 				}catch(e){
 					this.showToast(e)
 				}
-				
+			},
+			async login(){
+				try{
+					
+					let res = await Http.login({userName:this.userName,password:this.password,idKey:this.idkey,code:this.code})
+					console.log(res)
+					if(res.code != 200){
+						//TODO 提示错误
+						if(res.msg){
+							this.showToast(res.msg)
+							return
+						}else{
+							this.showToast(`未知code:${res.code}`)
+							return
+						}
+					}
+					uni.setStorageSync("user_info",res.data.userInfo)
+					uni.reLaunch({
+						url:'/pages/room/room'
+					})
+				}catch(e){
+					this.showToast(e)
+				}
 			}
 		},
 		mounted() {
