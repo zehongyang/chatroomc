@@ -1,7 +1,7 @@
 const BaseUrl = "http://192.168.1.3:8080"
-const CaptchaPath = "/user/captcha"
-const RegisterPath = "/user/register"
-const LoginPath = "/user/login"
+const CaptchaPath = "/guest/captcha"
+const RegisterPath = "/guest/register"
+const LoginPath = "/guest/login"
 export default {
 	post(url,data,header){
 		return new Promise((resolve,reject)=>{
@@ -12,13 +12,33 @@ export default {
 				method:"POST",
 				complete(res) {
 					if(!res.statusCode){
-						reject("请求超时，请检测网络")
+						uni.showToast({
+							title:"请求超时，请检测网络",
+							icon:"none"
+						})
 						return
 					}
 					if(res.statusCode != 200){
-						reject(`未知code:${res.statusCode}`)
+						uni.showToast({
+							title:`未知code:${res.statusCode}`,
+							icon:"none"
+						})
+						return
 					}else{
-						resolve(res.data)
+						if(res.data.code != 200){
+							if(res.data.msg){
+								uni.showToast({
+									title:res.data.msg
+								})
+							}else{
+								uni.showToast({
+									title:`未知code:${res.data.code}`,
+									icon:"none"
+								})
+							}
+						}else{
+							resolve(res.data)
+						}
 					}
 				}
 			})

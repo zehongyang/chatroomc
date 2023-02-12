@@ -1,6 +1,5 @@
 <template>
 	<view>
-		<u-toast ref="uToast"></u-toast>
 		<view class="center">
 			<u-input class="center-account" v-model="userName" @change="canSubmit" placeholder="请输入6-16位账号" shape="circle"></u-input>
 			<u-input class="center-account" v-model="password" @change="canSubmit" type="password" placeholder="请输入6位及以上密码" shape="circle"></u-input>
@@ -39,26 +38,9 @@
 		},
 		methods:{
 			async captcha(){
-				try{
-					let res = await Http.captcha()
-					if(res.code != 200){
-						//TODO 提示错误
-						if(res.msg){
-							this.showToast(res.msg)
-							return
-						}else{
-							this.showToast(`未知code:${res.code}`)
-							return
-						}
-					}
-					this.captchaSrc = res.data.bs4
-					this.idkey = res.data.id
-				}catch(e){
-					this.showToast(e)
-				}
-			},
-			showToast(errMsg){
-				this.$refs.uToast.show({message:errMsg,duration: 1000})
+				let res = await Http.captcha()
+				this.captchaSrc = res.data.bs4
+				this.idkey = res.data.id
 			},
 			jumpToPrivacy(){
 				this.checked = !this.checked
@@ -75,49 +57,18 @@
 				this.noOpt = (!this.userName || this.userName.length < 6 || this.userName.length > 16  || !this.password || this.password.length < 6 || !this.code || !this.checked)
 			},
 			async register(){
-				try{
-					
-					let res = await Http.register({userName:this.userName,password:this.password,idKey:this.idkey,code:this.code})
-					if(res.code != 200){
-						//TODO 提示错误
-						if(res.msg){
-							this.showToast(res.msg)
-							return
-						}else{
-							this.showToast(`未知code:${res.code}`)
-							return
-						}
-					}
-					uni.setStorageSync("user_info",res.data.userInfo)
-					uni.reLaunch({
-						url:'/pages/room/room'
-					})
-				}catch(e){
-					this.showToast(e)
-				}
+				let res = await Http.register({userName:this.userName,password:this.password,idKey:this.idkey,code:this.code})
+				uni.setStorageSync("user_info",res.data.userInfo)
+				uni.reLaunch({
+					url:'/pages/room/room'
+				})
 			},
 			async login(){
-				try{
-					
-					let res = await Http.login({userName:this.userName,password:this.password,idKey:this.idkey,code:this.code})
-					console.log(res)
-					if(res.code != 200){
-						//TODO 提示错误
-						if(res.msg){
-							this.showToast(res.msg)
-							return
-						}else{
-							this.showToast(`未知code:${res.code}`)
-							return
-						}
-					}
-					uni.setStorageSync("user_info",res.data.userInfo)
-					uni.reLaunch({
-						url:'/pages/room/room'
-					})
-				}catch(e){
-					this.showToast(e)
-				}
+				let res = await Http.login({userName:this.userName,password:this.password,idKey:this.idkey,code:this.code})
+				uni.setStorageSync("user_info",res.data.userInfo)
+				uni.reLaunch({
+					url:'/pages/room/room'
+				})
 			}
 		},
 		mounted() {

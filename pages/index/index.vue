@@ -1,35 +1,60 @@
 <template>
 	<view class="content">
-		
+		<u-toast ref="uToast"></u-toast>
 		<u-text text="hello wold"></u-text>
 		<u-button @click="connect">创建连接</u-button>
+		<view>
+			{{message.content}}
+		</view>
 	</view>
 </template>
 
 <script>
 	import socket from '../../socket/websocket.js'
+	import {mapState} from 'vuex'
 	export default {
 		data() {
 			return {
 				title: 'Hellso',
 				conn: null,
-				showToast:false
+				showToast:false,
+				msg: '123'
 			}
 		},
 		onLoad() {
 
 		},
+		computed:{
+			myMsg(){
+				return "1111"
+			},
+			...mapState(['message'])
+		},
+		watch:{
+			message(val,oldVal){
+				
+			}
+		},
+		mounted() {
+			
+		}
+		,
 		methods: {
 			connect(){
 				// socket.initSocket()
-				this.showToast = true
-				console.log(this.showToast)
+				// socket.testemit()
+				// uni.$u.toast(111122222224648486486)
+				uni.showToast({
+					title: String(111122222224648486486),
+					icon: 'none',
+					duration: 2000
+				})
 			}
 		}
 	}
 </script>
 
-<style>
+<style lang="scss" scoped>
 	.content {
 		display: flex;
 		flex-direction: column;
