@@ -22,7 +22,10 @@
 			}
 		},
 		onLoad() {
-
+			
+		},
+		onUnload() {
+			
 		},
 		computed:{
 			myMsg(){
@@ -44,10 +47,8 @@
 				// socket.initSocket()
 				// socket.testemit()
 				// uni.$u.toast(111122222224648486486)
-				uni.showToast({
-					title: String(111122222224648486486),
-					icon: 'none',
-					duration: 2000
+				uni.navigateTo({
+					url:'/pages/room_info/room_info'
 				})
 			}
 		}

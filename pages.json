@@ -6,10 +6,9 @@
 	    "style" :                                                                                    
 	    {
 	        "navigationBarTitleText": "房间列表",
-	        "enablePullDownRefresh": false,
-			"disableScroll":true
+	        "enablePullDownRefresh": true,
+			"onReachBottomDistance": 50
 	    }
-	    
 	}
 	,
 	{
@@ -36,6 +35,15 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "用户协议及隐私政策",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/room_info/room_info",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "详情",
                 "enablePullDownRefresh": false
             }
             

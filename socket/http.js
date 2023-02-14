@@ -2,6 +2,7 @@ const BaseUrl = "http://192.168.1.3:8080"
 const CaptchaPath = "/guest/captcha"
 const RegisterPath = "/guest/register"
 const LoginPath = "/guest/login"
+const RoomListPath = "/user/rooms"
 export default {
 	post(url,data,header){
 		return new Promise((resolve,reject)=>{
@@ -54,6 +55,10 @@ export default {
 	},
 	login(data){
 		let url = BaseUrl+LoginPath
+		return this.post(url,data)
+	},
+	roomList(data){
+		let url = BaseUrl+RoomListPath
 		return this.post(url,data)
 	}
 }

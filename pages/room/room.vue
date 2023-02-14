@@ -1,106 +1,68 @@
 <template>
 	<view>
 		<view>
-			<u-grid col="3">
-				<u-grid-item class="room-info">
-					<u-image src="/static/imgs/temp.jpeg" width="100px" height="100px"></u-image>
+			
+			<u-grid col="3" v-if="rooms.length > 0">
+				<u-grid-item class="room-info" v-for="(item,id) in rooms" :key="id">
+					<u-image :src="'http://192.168.1.3:8080/asset/'+item.img" width="120px" height="120px"></u-image>
 					<view class="room-text">
-						<u-text text="黑色玫瑰 145"></u-text>
-					</view>
-				</u-grid-item>
-				<u-grid-item class="room-info">
-					<u-image src="/static/imgs/temp.jpeg" width="100px" height="100px"></u-image>
-					<view class="room-text">
-						<u-text text="黑色玫瑰 145"></u-text>
-					</view>
-				</u-grid-item>
-				<u-grid-item class="room-info">
-					<u-image src="/static/imgs/temp.jpeg" width="100px" height="100px"></u-image>
-					<view class="room-text">
-						<u-text text="黑色玫瑰 145"></u-text>
-					</view>
-				</u-grid-item>
-				<u-grid-item class="room-info">
-					<u-image src="/static/imgs/temp.jpeg" width="100px" height="100px"></u-image>
-					<view class="room-text">
-						<u-text text="黑色玫瑰 145"></u-text>
-					</view>
-				</u-grid-item>
-				<u-grid-item class="room-info">
-					<u-image src="/static/imgs/temp.jpeg" width="100px" height="100px"></u-image>
-					<view class="room-text">
-						<u-text text="黑色玫瑰 145"></u-text>
-					</view>
-				</u-grid-item>
-				<u-grid-item class="room-info">
-					<u-image src="/static/imgs/temp.jpeg" width="100px" height="100px"></u-image>
-					<view class="room-text">
-						<u-text text="黑色玫瑰 145"></u-text>
+						<u-text :text="item.name+' '+item.onlines"></u-text>
 					</view>
 				</u-grid-item>
 			</u-grid>
+			<u-empty v-else text="暂无房间" marginTop="20">
+				
+			</u-empty>
+		
 		</view>
-		<!-- <view class="room">
-			<view class="room-info">
-				<u-image src="/static/imgs/temp.jpeg" width="100px" height="100px"></u-image>
-			</view>
-			<view class="room-info">
-				<u-image src="/static/imgs/temp.jpeg" width="100px" height="100px"></u-image>
-			</view>
-			<view class="room-info">
-				<u-image src="/static/imgs/temp.jpeg" width="100px" height="100px"></u-image>
-			</view>
-			<view class="room-info">
-				<u-image src="/static/imgs/temp.jpeg" width="100px" height="100px"></u-image>
-			</view>
-			<view class="room-info">
-				<u-image src="/static/imgs/temp.jpeg" width="100px" height="100px"></u-image>
-			</view>
-			<view class="room-info">
-				<u-image src="/static/imgs/temp.jpeg" width="100px" height="100px"></u-image>
-			</view>
-			<view class="room-info">
-				<u-image src="/static/imgs/temp.jpeg" width="100px" height="100px"></u-image>
-			</view>
-		</view> -->
-		<view>{{name}}</view>
-		<u-button text="连接" @click="connect"></u-button>
-		<u-button text="断开" @click="close"></u-button>
 	</view>
 </template>
 
 <script>
 	import Websocket from '../../socket/websocket.js'
-	
+	import Http from '../../socket/http.js'
 	export default {
 		data() {
 			return {
-				name: "zhangsan"
+				rooms:[],
+				limit: 16,
+				id:0,
 			};
 		},
 		onLoad() {
-			uni.$on("change",(data)=>{
-				console.log(data)
-				this.name = data
-			})
+		
 		},
-		watch:{
-			name:function(val,oldVal){
-				console.log(val,oldVal)
-			}
+		onReachBottom() {
+			console.log("reach bottom")
+			this.getRooms()
+		},
+		onPullDownRefresh() {
+			console.log("refresh")
+			this.getRooms(true)
 		},
 		methods:{
-			connect(){
-				Websocket.initSocket()
-			},
-			close(){
-				uni.closeSocket({
-					
-				})
+			async getRooms(refresh){
+				if(refresh){
+					this.id = 0
+				}
+				let res = await Http.roomList({id:this.id,limit:this.limit})
+				if(!res || !res.data || !res.data.rooms){
+					setTimeout(function() {
+						uni.stopPullDownRefresh()
+					}, 1000);
+					return
+				}
+				if(refresh){
+					this.rooms = res.data.rooms
+				}else{
+					this.rooms.push(...res.data.rooms)
+				}
+				this.id = res.data.rooms[res.data.rooms.length-1].id
+				uni.stopPullDownRefresh()
 			}
 		},
 		mounted() {
-			
+			this.getRooms(true)
 		}
 	}
 </script>
