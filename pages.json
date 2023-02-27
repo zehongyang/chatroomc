@@ -19,7 +19,6 @@
 	        "enablePullDownRefresh": false,
 			"disableScroll":true
 	    }
-	    
 	},
 	  
 		{
@@ -44,7 +43,9 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "详情",
-                "enablePullDownRefresh": false
+                "enablePullDownRefresh": false,
+				"disableScroll":true,
+				"app-plus": { "softinputMode": "adjustResize"}
             }
             
         }

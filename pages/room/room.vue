@@ -2,11 +2,13 @@
 	<view>
 		<view>
 			
-			<u-grid col="3" v-if="rooms.length > 0">
-				<u-grid-item class="room-info" v-for="(item,id) in rooms" :key="id">
-					<u-image :src="'http://192.168.1.3:8080/asset/'+item.img" width="120px" height="120px"></u-image>
-					<view class="room-text">
-						<u-text :text="item.name+' '+item.onlines"></u-text>
+			<u-grid col="2" v-if="rooms.length > 0">
+				<u-grid-item class="room-info" v-for="item in rooms" :key="item.id">
+					<view @click="roomInfo(item.id,item.name)">
+						<u-image :src="'http://192.168.1.3:8080/asset/'+item.img" width="150px" height="150px"></u-image>
+						<view class="room-text">
+							<u-text :text="item.name+' '+(item.onlines?item.onlines:0)"></u-text>
+						</view>
 					</view>
 				</u-grid-item>
 			</u-grid>
@@ -59,6 +61,11 @@
 				}
 				this.id = res.data.rooms[res.data.rooms.length-1].id
 				uni.stopPullDownRefresh()
+			},
+			roomInfo(id,name){
+				uni.navigateTo({
+					url:`/pages/room_info/room_info?id=${id}&name=${name}`
+				})
 			}
 		},
 		mounted() {

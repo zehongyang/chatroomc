@@ -17,6 +17,7 @@ export default {
 							title:"请求超时，请检测网络",
 							icon:"none"
 						})
+						uni.stopPullDownRefresh()
 						return
 					}
 					if(res.statusCode != 200){
@@ -24,6 +25,7 @@ export default {
 							title:`未知code:${res.statusCode}`,
 							icon:"none"
 						})
+						uni.stopPullDownRefresh()
 						return
 					}else{
 						if(res.data.code != 200){
@@ -31,11 +33,13 @@ export default {
 								uni.showToast({
 									title:res.data.msg
 								})
+								uni.stopPullDownRefresh()
 							}else{
 								uni.showToast({
 									title:`未知code:${res.data.code}`,
 									icon:"none"
 								})
+								uni.stopPullDownRefresh()
 							}
 						}else{
 							resolve(res.data)
